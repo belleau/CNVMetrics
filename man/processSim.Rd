@@ -8,10 +8,10 @@
 processSim(curSample, nbSim)
 }
 \arguments{
-\item{curSample}{a \code{GRangesList} that contains a collection of 
-genomic ranges representing copy number events, including amplified/deleted 
-status, from at least 1 samples. The sample must have a metadata column 
-called '\code{state}' with a state, in an character string format, 
+\item{curSample}{a \code{GRangesList} that contains a collection of
+genomic ranges representing copy number events, including amplified/deleted
+status, from at least 1 samples. The sample must have a metadata column
+called '\code{state}' with a state, in an character string format,
 specified for each region (ex: DELETION, LOH, AMPLIFICATION, NEUTRAL, etc.).}
 
 \item{nbSim}{a \code{integer} which is corresponding to the number of simulation}
@@ -28,17 +28,26 @@ TODO
 metric value of 1 is only obtained when the two samples are identical.
 }
 \examples{
-TODO
-## Create a GRangesList object with 1 samples
+
+## Load required package to generate the samples
+require(GenomicRanges)
+
+## Create one 'demo' genome with 2 chromosomes
+## in a GRangesList object (1 sample, multiple GRanges)
 ## The stand of the regions doesn't affect the calculation of the metric
 demo <- GRangesList()
-demo[["sample01"]] <- GRanges(seqnames="chr1", 
-    ranges=IRanges(start=c(1905048, 4554832, 31686841, 32686222), 
-    end=c(2004603, 4577608, 31695808, 32689222)), strand="*",
-    state=c("AMPLIFICATION", "AMPLIFICATION", "DELETION", "LOH"),
-    CN=(c(0.5849625, 1, -1, -1)))
+demo[["sample01"]] <- GRanges(seqnames=c(rep("chr1", 4), rep("chr2", 3)),
+    ranges=IRanges(start=c(1905048, 4554832, 31686841, 32686222,
+        1, 120331, 725531),
+    end=c(2004603, 4577608, 31695808, 32689222, 117121,
+        325555, 1225582)),
+    strand="*",
+    state=c("AMPLIFICATION", "NEUTRAL", "DELETION", "LOH",
+        "DELETION", "NEUTRAL", "NEUTRAL"),
+    CN=c(0.5849625, 0, -1, -1, -0.87777, 0, 0))
 
-simRes <- processSim(demo[["sample01"]], 10)
+## Generates 10 simulated genomes based on the 'demo' genome
+simRes <- processSim(curSample=demo[["sample01"]], nbSim=10)
 
 }
 \author{
